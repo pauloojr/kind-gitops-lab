@@ -72,7 +72,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/SEU-USUARIO/SEU-REPOSITORIO.git'
+    repoURL: 'https://github.com/pauloojr/kind-gitops-lab'
     targetRevision: HEAD
     path: manifests/core-app
   destination:
