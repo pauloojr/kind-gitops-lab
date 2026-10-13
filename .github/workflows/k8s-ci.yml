@@ -29,15 +29,30 @@ jobs:
               line-length: disable
               document-start: disable
 
-      - name: Setup Kubeconform
-        uses: yannh/kubeconform-action@v0.1.2
-        with:
-          k8s-version: "1.30.0"
-          files: "manifests/core-app/"
-          schema-locations: "default"
+      - name: Install Kubeconform
+        env:
+          KUBECONFORM_VERSION: "v0.6.7"
+        run: |
+          set -euo pipefail
+          curl -sSL -o kubeconform.tar.gz "https://github.com/yannh/kubeconform/releases/download/${KUBECONFORM_VERSION}/kubeconform-linux-amd64.tar.gz"
+          tar -xzf kubeconform.tar.gz kubeconform
+          sudo mv kubeconform /usr/local/bin/
+          rm kubeconform.tar.gz
+          kubeconform -v
+
+      - name: Run Kubeconform Validation
+        run: |
+          set -euo pipefail
+          kubeconform \
+            -strict \
+            -kubernetes-version 1.30.0 \
+            -schema-location default \
+            -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json' \
+            -summary \
+            manifests/core-app/
 
       - name: Run Trivy IaC/K8s Misconfiguration Scan
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.29.0
         with:
           scan-type: 'config'
           scan-dir: 'manifests/core-app'
