@@ -58,6 +58,8 @@ jobs:
           docker run --rm \
             -v "${GITHUB_WORKSPACE}/manifests/core-app:/manifests" \
             aquasec/trivy:0.58.2 config \
+            --skip-check-update \
+            --timeout 2m \
             --exit-code 1 \
             --severity HIGH,CRITICAL \
             /manifests
