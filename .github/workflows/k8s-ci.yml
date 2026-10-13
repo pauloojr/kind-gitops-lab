@@ -1,0 +1,46 @@
+name: Kubernetes Manifests CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  validate-and-scan:
+    name: Lint, Validate & Security Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: YAML Lint
+        uses: ibiqlik/action-yamllint@v3
+        with:
+          file_or_dir: manifests/
+          config_data: |
+            extends: default
+            rules:
+              line-length: disable
+              document-start: disable
+
+      - name: Setup Kubeconform
+        uses: yannh/kubeconform-action@v0.1.2
+        with:
+          k8s-version: "1.30.0"
+          files: "manifests/core-app/"
+          schema-locations: "default"
+
+      - name: Run Trivy IaC/K8s Misconfiguration Scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'config'
+          scan-dir: 'manifests/core-app'
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: 'CRITICAL,HIGH'
