@@ -27,11 +27,25 @@ spec:
         fsGroup: 10001
         seccompProfile:
           type: RuntimeDefault
+      tolerations:
+        - key: "kubernetes.azure.com/scalesetpriority"
+          operator: "Equal"
+          value: "spot"
+          effect: "NoSchedule"
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: "kubernetes.azure.com/scalesetpriority"
+                    operator: "In"
+                    values: ["spot"]
       containers:
         - name: web
           image: hashicorp/http-echo:0.2.3
           args:
-            - "-text=Ambiente Local Kind Ativo"
+            - "-text=Ambiente de Producao Azure AKS Operacional via GitOps"
             - "-listen=:8080"
           ports:
             - containerPort: 8080
