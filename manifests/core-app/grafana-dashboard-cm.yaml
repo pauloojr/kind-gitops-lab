@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-core-app
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+data:
+  core-app-overview.json: |
+    {
+      "annotations": { "list": [] },
+      "editable": false,
+      "fiscalYearStartMonth": 0,
+      "graphTooltip": 0,
+      "id": null,
+      "links": [],
+      "liveNow": false,
+      "panels": [
+        {
+          "collapsed": false,
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+          "id": 1,
+          "title": "Replicas Ativas (core-app)",
+          "type": "stat",
+          "targets": [
+            {
+              "expr": "sum(kube_deployment_status_replicas_ready{namespace='production', deployment='core-app'})",
+              "refId": "A"
+            }
+          ]
+        },
+        {
+          "collapsed": false,
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+          "id": 2,
+          "title": "Consumo de Memoria dos Pods (MB)",
+          "type": "timeseries",
+          "targets": [
+            {
+              "expr": "sum(container_memory_working_set_bytes{namespace='production',pod=~'core-app-.*',container!=''}) by (pod) / 1024 / 1024",
+              "legendFormat": "{{pod}}",
+              "refId": "A"
+            }
+          ]
+        }
+      ],
+      "refresh": "10s",
+      "schemaVersion": 38,
+      "style": "dark",
+      "tags": ["production", "core-app"],
+      "time": { "from": "now-30m", "to": "now" },
+      "title": "Visao Geral - Core App & Pods",
+      "uid": "core-app-overview"
+    }

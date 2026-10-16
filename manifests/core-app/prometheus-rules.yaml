@@ -1,0 +1,31 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: core-app-alerts
+  namespace: production
+  labels:
+    release: kube-prometheus-stack
+    app.kubernetes.io/name: core-app
+spec:
+  groups:
+    - name: core-app.rules
+      rules:
+        - alert: CoreAppPodNotReady
+          expr: kube_pod_status_ready{namespace="production",pod=~"core-app-.*",condition="true"} == 0
+          for: 1m
+          labels:
+            severity: critical
+            team: devops
+          annotations:
+            summary: "Pod da aplicacao core-app nao esta pronto"
+            description: "O pod {{ $labels.pod }} no namespace {{ $labels.namespace }} esta ha mais de 1 minuto em estado nao pronto."
+
+        - alert: CoreAppHighRestartRate
+          expr: rate(kube_pod_container_status_restarts_total{namespace="production",pod=~"core-app-.*"}[5m]) * 60 > 1
+          for: 2m
+          labels:
+            severity: warning
+            team: devops
+          annotations:
+            summary: "Reinicio frequente de containers detectado"
+            description: "O pod {{ $labels.pod }} reiniciou mais de uma vez nos ultimos 5 minutos."
