@@ -28,21 +28,36 @@ alertmanager:
         memory: 128Mi
 
 grafana:
+  enabled: true
   adminPassword: "AdminPassword123!"
   ingress:
     enabled: true
-    ingressClassName: nginx
+    ingressClassName: "nginx"
     annotations:
       ingress.kubernetes.io/ssl-redirect: "false"
       nginx.ingress.kubernetes.io/ssl-redirect: "false"
     hosts:
       - grafana.20.10.233.87.nip.io
-    paths:
-      - /
+    path: /
     pathType: Prefix
     tls:
-      - hosts:
+      - secretName: grafana-tls-secret
+        hosts:
           - grafana.20.10.233.87.nip.io
+
+prometheus:
+  prometheusSpec:
+    retention: 6h
+    resources:
+      requests:
+        cpu: 100m
+        memory: 512Mi
+      limits:
+        cpu: 500m
+        memory: 1024Mi
+
+alertmanager:
+  enabled: true
 
 nodeExporter:
   enabled: true
