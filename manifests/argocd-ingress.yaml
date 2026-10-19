@@ -1,17 +1,15 @@
-kubectl apply -f -
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: argocd-server-ingress
   namespace: argocd
   annotations:
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 spec:
   ingressClassName: nginx
   rules:
-    - host: argocd.${EXTERNAL_IP}.nip.io
+    - host: argocd.172.193.24.176.nip.io
       http:
         paths:
           - path: /
@@ -20,4 +18,4 @@ spec:
               service:
                 name: argocd-server
                 port:
-                  name: https
+                  number: 443
