@@ -7,13 +7,16 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  source:
-    repoURL: 'https://github.com/pauloojr/kind-gitops-lab.git'
-    targetRevision: main
-    path: platform/monitoring
-    helm:
-      valueFiles:
-        - values.yaml
+  sources:
+    - repoURL: 'https://github.com/pauloojr/kind-gitops-lab.git'
+      targetRevision: main
+      ref: values
+    - repoURL: 'https://prometheus-community.github.io/helm-charts'
+      chart: kube-prometheus-stack
+      targetRevision: 65.8.1
+      helm:
+        valueFiles:
+          - $values/platform/monitoring/values.yaml
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: monitoring
