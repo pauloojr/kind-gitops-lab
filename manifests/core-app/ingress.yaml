@@ -8,17 +8,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: app.172.193.24.176.nip.io
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: core-app-svc
-                port:
-                  number: 80
-    - host: app.local.test
+    - host: app.20.10.233.87.nip.io
       http:
         paths:
           - path: /
