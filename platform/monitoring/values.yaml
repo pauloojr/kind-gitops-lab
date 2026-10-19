@@ -39,11 +39,17 @@ grafana:
   ingress:
     enabled: true
     ingressClassName: nginx
+    annotations:
+      ingress.kubernetes.io/ssl-redirect: "false"
+      nginx.ingress.kubernetes.io/ssl-redirect: "false"
     hosts:
-      - grafana.57.166.182.56.nip.io
+      - grafana.20.10.233.87.nip.io
     paths:
       - /
     pathType: Prefix
+    tls:
+      - hosts:
+          - grafana.20.10.233.87.nip.io
 
 nodeExporter:
   enabled: true
