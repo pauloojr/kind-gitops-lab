@@ -43,7 +43,7 @@ spec:
                     values: ["spot"]
       containers:
         - name: api
-          image: ghcr.io/pauloojr/core-api:v1.0.0
+          image: ghcr.io/pauloojr/core-api:sha-bb7f077
           imagePullPolicy: IfNotPresent
           env:
             - name: PORT
