@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-core-app
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+data:
+  core-app-overview.json: |
+    {
+      "annotations": { "list": [] },
+      "editable": false,
+      "panels": [
+        {
+          "id": 1,
+          "title": "Replicas Ativas (core-api)",
+          "type": "stat",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "targets": [
+            {
+              "expr": "sum(kube_deployment_status_replicas_ready{namespace='production', deployment='core-app'})",
+              "refId": "A"
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "title": "Uso de Memoria (core-api)",
+          "type": "timeseries",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "targets": [
+            {
+              "expr": "sum(container_memory_working_set_bytes{namespace='production',pod=~'core-app-.*'}) by (pod)",
+              "refId": "A"
+            }
+          ]
+        }
+      ],
+      "schemaVersion": 38,
+      "title": "Visao Geral - Core API",
+      "uid": "core-api-overview"
+    }
