@@ -37,13 +37,13 @@ grafana:
       ingress.kubernetes.io/ssl-redirect: "false"
       nginx.ingress.kubernetes.io/ssl-redirect: "false"
     hosts:
-      - grafana.20.10.233.87.nip.io
+      - grafana.48.204.255.129.nip.io
     path: /
     pathType: Prefix
     tls:
       - secretName: grafana-tls-secret
         hosts:
-          - grafana.20.10.233.87.nip.io
+          - grafana.48.204.255.129.nip.io
 
 prometheus:
   prometheusSpec:
